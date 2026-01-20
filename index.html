@@ -22,6 +22,7 @@
         --border-blue: #d0e1f9;
         --white: #ffffff;
         --danger: #ef4444;
+        --accent-gradient: linear-gradient(135deg, #0066ff 0%, #00d4ff 100%);
 
         /* Prioridades: De Rojo (Urgente) a Verde (Baja) */
         --p1: #ef4444; /* Urgente */
@@ -284,7 +285,7 @@
         cursor: pointer;
         transition: all 0.2s;
         text-align: center;
-        appearance: none; /* Limpieza visual */
+        appearance: none;
       }
 
       @media (min-width: 1024px) {
@@ -295,12 +296,6 @@
           background-color: #fcfcfc;
           appearance: auto;
         }
-      }
-
-      .filter-group select:focus {
-        border-color: var(--primary-blue);
-        background: #fff;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
       }
 
       /* --- TAREAS --- */
@@ -336,7 +331,6 @@
         box-shadow: 0 10px 20px rgba(0, 0, 0, 0.03);
       }
 
-      /* Contenedor para botones de acción */
       .task-actions {
         display: flex;
         gap: 8px;
@@ -432,7 +426,7 @@
         background: #f0f5ff;
       }
 
-      /* --- CALENDARIO MEJORADO --- */
+      /* --- CALENDARIO --- */
       .calendar-container {
         background: white;
         padding: 24px;
@@ -467,25 +461,6 @@
         font-weight: 600;
         transition: all 0.2s;
       }
-
-      /* Calendario más compacto en PC */
-      @media (min-width: 1024px) {
-        .calendar-container {
-          max-width: 800px;
-          margin-left: auto;
-          margin-right: auto;
-        }
-        .calendar-grid {
-          gap: 6px;
-        }
-        .cal-day {
-          font-size: 0.95rem;
-        }
-        .cal-header {
-          font-size: 0.75rem;
-        }
-      }
-
       .cal-day:hover {
         background: var(--light-blue);
         color: var(--primary-blue);
@@ -496,7 +471,6 @@
         font-weight: 900;
         border: 2px solid var(--primary-blue);
       }
-
       .cal-day.has-task {
         background-color: var(--light-blue);
         color: var(--primary-blue);
@@ -505,11 +479,71 @@
         background-color: #fff1f1;
         color: var(--danger);
       }
-
       .cal-day.selected {
         background: var(--primary-blue) !important;
         color: white !important;
         box-shadow: 0 4px 12px rgba(0, 102, 255, 0.4);
+      }
+
+      /* --- SECCIÓN ENLACES (NUEVA) --- */
+      .links-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 20px;
+        margin-top: 20px;
+      }
+      @media (min-width: 768px) {
+        .links-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+
+      .resource-card {
+        background: var(--accent-gradient);
+        border-radius: 24px;
+        padding: 30px;
+        color: white;
+        text-decoration: none;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        min-height: 200px;
+        transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        box-shadow: 0 15px 35px rgba(0, 102, 255, 0.2);
+        position: relative;
+        overflow: hidden;
+      }
+      .resource-card:hover {
+        transform: translateY(-8px) scale(1.02);
+        box-shadow: 0 20px 45px rgba(0, 102, 255, 0.3);
+      }
+      .resource-card::after {
+        content: "➜";
+        position: absolute;
+        right: 20px;
+        bottom: 20px;
+        font-size: 2rem;
+        opacity: 0.3;
+        transition: all 0.3s;
+      }
+      .resource-card:hover::after {
+        transform: translateX(10px);
+        opacity: 0.8;
+      }
+      .resource-card h3 {
+        font-size: 1.8rem;
+        font-weight: 900;
+        margin-bottom: 8px;
+      }
+      .resource-card p {
+        font-size: 1rem;
+        opacity: 0.9;
+        font-weight: 500;
+        line-height: 1.4;
+      }
+      .resource-icon {
+        font-size: 3rem;
+        margin-bottom: 15px;
       }
 
       /* --- MODALES --- */
@@ -530,15 +564,6 @@
         padding: 35px 24px;
         animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
         max-width: 600px;
-      }
-      @media (min-width: 768px) {
-        .modal {
-          align-items: center;
-        }
-        .modal-content {
-          border-radius: 24px;
-          max-width: 500px;
-        }
       }
       @keyframes slideUp {
         from {
@@ -602,10 +627,6 @@
         background: var(--border);
         color: var(--text-gray);
       }
-      .btn:hover {
-        filter: brightness(1.1);
-        transform: translateY(-1px);
-      }
 
       .fab {
         position: fixed;
@@ -625,9 +646,6 @@
         cursor: pointer;
         z-index: 90;
         transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      }
-      .fab:hover {
-        transform: scale(1.1) rotate(90deg);
       }
       @media (max-width: 1023px) {
         .fab {
@@ -697,6 +715,28 @@
             <line x1="3" y1="10" x2="21" y2="10" />
           </svg>
           <span>CALENDARIO</span>
+        </div>
+        <div
+          class="nav-item"
+          id="nav-links"
+          onclick="switchView('links', this)"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="3"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path
+              d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"
+            />
+            <path
+              d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"
+            />
+          </svg>
+          <span>ENLACES</span>
         </div>
       </nav>
 
@@ -783,15 +823,83 @@
             <div id="day-tasks-list" class="task-list-container"></div>
           </div>
         </div>
+
+        <!-- VISTA ENLACES ANEXOS -->
+        <div id="view-links" class="view">
+          <header>
+            <h1
+              style="
+                font-size: 2.2rem;
+                font-weight: 900;
+                letter-spacing: -1.5px;
+              "
+            >
+              Enlaces Anexos
+            </h1>
+            <p
+              style="color: var(--text-gray); font-weight: 600; margin-top: 5px"
+            >
+              Recursos externos y herramientas útiles
+            </p>
+          </header>
+
+          <div class="links-grid">
+            <a
+              href="https://sites.google.com/site/cbttemas"
+              target="_blank"
+              class="resource-card"
+            >
+              <div>
+                <div class="resource-icon">📚</div>
+                <h3>CBT Temas</h3>
+                <p>
+                  Accede a la plataforma oficial de recursos académicos y temas
+                  de estudio.
+                </p>
+              </div>
+            </a>
+
+            <!-- Puedes añadir más tarjetas aquí en el futuro -->
+            <div
+              class="resource-card"
+              style="
+                background: #f0f5ff;
+                color: var(--primary-blue);
+                border: 2px dashed var(--border-blue);
+                box-shadow: none;
+              "
+            >
+              <div style="text-align: center; margin: auto">
+                <div style="font-size: 2rem; margin-bottom: 10px">✨</div>
+                <h3 style="font-size: 1.2rem; margin-bottom: 5px">
+                  Próximamente
+                </h3>
+                <p style="color: var(--text-gray); font-size: 0.9rem">
+                  Más herramientas educativas.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
       </main>
     </div>
 
     <button class="fab" onclick="openModal()">+</button>
 
-    <!-- MODAL: NUEVA/EDITAR TAREA -->
+    <!-- MODALES: TAREA Y CONFIRMACIÓN (Iguales al original) -->
     <div id="task-modal" class="modal">
       <div class="modal-content">
-        <h3 id="modal-title" style="font-size: 1.4rem; font-weight: 800; margin-bottom: 20px; text-align: center;">Nueva Tarea</h3>
+        <h3
+          id="modal-title"
+          style="
+            font-size: 1.4rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            text-align: center;
+          "
+        >
+          Nueva Tarea
+        </h3>
         <div class="form-group">
           <label>Actividad</label>
           <input
@@ -819,21 +927,24 @@
           <button class="btn btn-secondary" onclick="closeModal()">
             Cancelar
           </button>
-          <button class="btn btn-primary" id="save-task-btn" onclick="handleSaveTask()">
+          <button
+            class="btn btn-primary"
+            id="save-task-btn"
+            onclick="handleSaveTask()"
+          >
             Guardar
           </button>
         </div>
       </div>
     </div>
 
-    <!-- MODAL: CONFIRMACIÓN -->
     <div id="delete-modal" class="modal">
       <div class="modal-content" style="text-align: center; padding: 40px 24px">
         <h3 style="font-size: 1.4rem; font-weight: 800; margin-bottom: 10px">
           ¿Eliminar tarea?
         </h3>
         <p style="color: var(--text-gray); margin-bottom: 30px">
-          Esta acción borrará el registro de EduNote permanentemente.
+          Esta acción borrará el registro permanentemente.
         </p>
         <div class="btn-group">
           <button class="btn btn-secondary" onclick="closeDeleteModal()">
@@ -860,6 +971,10 @@
       window.addEventListener("load", () => {
         renderTaskList();
         renderCalendar();
+        updateDateHeader();
+      });
+
+      function updateDateHeader() {
         const dateStr = new Date().toLocaleDateString("es-ES", {
           weekday: "long",
           day: "numeric",
@@ -867,46 +982,27 @@
         });
         document.getElementById("current-date").innerText =
           dateStr.charAt(0).toUpperCase() + dateStr.slice(1);
-      });
+      }
 
       function switchView(view, el) {
-        const currentView = document.querySelector(".view.active");
-        if (currentView) {
-          currentView.style.opacity = "0";
-          currentView.style.transform = "translateY(-10px)";
-        }
+        document
+          .querySelectorAll(".view")
+          .forEach((v) => v.classList.remove("active"));
+        document
+          .querySelectorAll(".nav-item")
+          .forEach((n) => n.classList.remove("active"));
 
-        setTimeout(() => {
-          document
-            .querySelectorAll(".view")
-            .forEach((v) => v.classList.remove("active"));
-          document
-            .querySelectorAll(".nav-item")
-            .forEach((n) => n.classList.remove("active"));
+        const nextView = document.getElementById("view-" + view);
+        nextView.classList.add("active");
+        el.classList.add("active");
 
-          const nextView = document.getElementById("view-" + view);
-          nextView.classList.add("active");
-          nextView.style.opacity = "1";
-          nextView.style.transform = "translateY(0)";
-          el.classList.add("active");
+        // Ocultar FAB en la vista de Enlaces
+        const fab = document.querySelector(".fab");
+        if (view === "links") fab.style.display = "none";
+        else fab.style.display = "flex";
 
-          if (view === "calendar") {
-            renderCalendar();
-            // Mostrar automáticamente las tareas del día de hoy
-            const today = new Date();
-            const todayISO = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
-            const todayElement = Array.from(document.querySelectorAll(".cal-day")).find(
-              (el) => el.classList.contains("today")
-            );
-            if (todayElement) {
-              showDayTasks(todayISO, todayElement);
-            }
-          } else {
-            // Recargar tareas desde localStorage antes de renderizar
-            tasks = JSON.parse(localStorage.getItem("arden_tasks_pro")) || [];
-            renderTaskList();
-          }
-        }, 50);
+        if (view === "calendar") renderCalendar();
+        else if (view === "tasks") renderTaskList();
       }
 
       function applyFilters() {
@@ -920,99 +1016,45 @@
         document.getElementById("input-text").value = "";
         document.getElementById("task-modal").style.display = "flex";
         const dateInput = document.getElementById("input-date");
-        const isCalendarView = document
-          .getElementById("view-calendar")
-          .classList.contains("active");
-        if (isCalendarView && selectedDateISO)
-          dateInput.value = selectedDateISO;
+        if (selectedDateISO) dateInput.value = selectedDateISO;
         else dateInput.valueAsDate = new Date();
         document.getElementById("input-priority").value = "4";
         document.getElementById("input-text").focus();
       }
 
-      function openEditModal(id) {
-        const task = tasks.find((t) => t.id === id);
-        if (!task) return;
-        
-        editingTaskId = id;
-        document.getElementById("modal-title").innerText = "Editar Tarea";
-        document.getElementById("save-task-btn").innerText = "Actualizar";
-        document.getElementById("input-text").value = task.text;
-        document.getElementById("input-date").value = task.date;
-        document.getElementById("input-priority").value = task.priority.toString();
-        document.getElementById("task-modal").style.display = "flex";
-        document.getElementById("input-text").focus();
-      }
-
       function closeModal() {
         document.getElementById("task-modal").style.display = "none";
-        editingTaskId = null;
-      }
-
-      function openDeleteModal(id) {
-        taskToDelete = id;
-        document.getElementById("delete-modal").style.display = "flex";
-        document.getElementById("confirm-delete-btn").onclick = () => {
-          deleteTask(taskToDelete);
-          closeDeleteModal();
-        };
       }
       function closeDeleteModal() {
         document.getElementById("delete-modal").style.display = "none";
-        taskToDelete = null;
       }
 
       function handleSaveTask() {
         const text = document.getElementById("input-text").value.trim();
         const date = document.getElementById("input-date").value;
-        const priority = document.getElementById("input-priority").value;
+        const priority = parseInt(
+          document.getElementById("input-priority").value,
+        );
         if (!text) return;
 
         if (editingTaskId) {
-          // Modo edición
           tasks = tasks.map((t) =>
-            t.id === editingTaskId
-              ? { ...t, text, date, priority: parseInt(priority) }
-              : t
+            t.id === editingTaskId ? { ...t, text, date, priority } : t,
           );
         } else {
-          // Modo agregar
-          const newTask = {
+          tasks.push({
             id: Date.now(),
             text,
             date,
-            priority: parseInt(priority),
+            priority,
             completed: false,
-          };
-          tasks.push(newTask);
+          });
         }
 
         save();
         closeModal();
-
         renderTaskList();
         renderCalendar();
-        if (selectedDateISO) {
-          const dayParts = selectedDateISO.split("-");
-          const dayEl = Array.from(document.querySelectorAll(".cal-day")).find(
-            (el) => el.innerText == parseInt(dayParts[2]),
-          );
-          if (dayEl) showDayTasks(selectedDateISO, dayEl);
-        }
-      }
-
-      // Funciones para long-press en móvil
-      function startLongPress(id) {
-        longPressTimer = setTimeout(() => {
-          openEditModal(id);
-        }, 500); // 500ms para detectar long-press
-      }
-
-      function cancelLongPress() {
-        if (longPressTimer) {
-          clearTimeout(longPressTimer);
-          longPressTimer = null;
-        }
       }
 
       function toggleTask(id) {
@@ -1021,13 +1063,6 @@
         );
         save();
         renderTaskList();
-        renderCalendar();
-        if (selectedDateISO) {
-          const dayEl = Array.from(document.querySelectorAll(".cal-day")).find(
-            (el) => el.classList.contains("selected"),
-          );
-          if (dayEl) showDayTasks(selectedDateISO, dayEl);
-        }
       }
 
       function deleteTask(id) {
@@ -1035,12 +1070,6 @@
         save();
         renderTaskList();
         renderCalendar();
-        if (selectedDateISO) {
-          const dayEl = Array.from(document.querySelectorAll(".cal-day")).find(
-            (el) => el.classList.contains("selected"),
-          );
-          if (dayEl) showDayTasks(selectedDateISO, dayEl);
-        }
       }
 
       function save() {
@@ -1049,79 +1078,49 @@
 
       function renderTaskList() {
         const container = document.getElementById("task-list");
-        const filterStatus = document.getElementById("filter-status").value;
-        const filterUrgency = document.getElementById("filter-urgency").value;
+        const fStatus = document.getElementById("filter-status").value;
+        const fUrgency = document.getElementById("filter-urgency").value;
         container.innerHTML = "";
 
-        let filteredTasks = tasks.filter((t) => {
-          const statusMatch =
-            filterStatus === "all" ||
-            (filterStatus === "pending" && !t.completed) ||
-            (filterStatus === "completed" && t.completed);
-          const urgencyMatch =
-            filterUrgency === "all" || t.priority == filterUrgency;
-          return statusMatch && urgencyMatch;
+        let filtered = tasks.filter((t) => {
+          const s =
+            fStatus === "all" ||
+            (fStatus === "pending" && !t.completed) ||
+            (fStatus === "completed" && t.completed);
+          const u = fUrgency === "all" || t.priority == fUrgency;
+          return s && u;
         });
 
-        if (filteredTasks.length === 0) {
+        if (filtered.length === 0) {
           container.innerHTML = '<div class="empty">No hay actividades.</div>';
           return;
         }
 
-        const sorted = filteredTasks.sort(
-          (a, b) =>
-            a.completed - b.completed ||
-            a.priority - b.priority ||
-            new Date(a.date) - new Date(b.date),
-        );
-
-        sorted.forEach((t) => {
-          const dateStr = t.date
-            ? new Date(t.date + "T00:00:00").toLocaleDateString("es-ES", {
-                month: "short",
-                day: "numeric",
-              })
-            : "Sin fecha";
-          const card = document.createElement("div");
-          card.className = "task-card";
-          card.onclick = () => toggleTask(t.id);
-          
-          // Eventos para long-press en móvil
-          card.addEventListener("touchstart", (e) => {
-            startLongPress(t.id);
+        filtered
+          .sort((a, b) => a.completed - b.completed || a.priority - b.priority)
+          .forEach((t) => {
+            const card = document.createElement("div");
+            card.className = "task-card";
+            card.onclick = () => toggleTask(t.id);
+            card.innerHTML = `
+            <div class="priority-indicator p-${t.priority} ${t.completed ? "done" : ""}">
+                ${t.completed ? "✓" : ""}
+            </div>
+            <div class="task-info">
+                <div class="task-title ${t.completed ? "completed" : ""}">
+                    ${escapeHTML(t.text)}
+                    <span class="urgency-badge" style="background: var(--p${t.priority})">${urgencyLabels[t.priority]}</span>
+                </div>
+                <div class="task-meta"><span>📅 ${t.date || "Sin fecha"}</span></div>
+            </div>
+            <div class="task-actions">
+                <button class="delete-btn" onclick="event.stopPropagation(); openDeleteModal(${t.id})">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg>
+                </button>
+            </div>
+          `;
+            container.appendChild(card);
           });
-          card.addEventListener("touchend", (e) => {
-            cancelLongPress();
-          });
-          card.addEventListener("touchmove", (e) => {
-            cancelLongPress();
-          });
-          
-          card.innerHTML = `
-                    <div class="priority-indicator p-${t.priority} ${t.completed ? "done" : ""}">
-                        ${t.completed ? '<span style="color:white; font-size:12px">✓</span>' : ""}
-                    </div>
-                    <div class="task-info">
-                        <div class="task-title ${t.completed ? "completed" : ""}">
-                            ${escapeHTML(t.text)}
-                            <span class="urgency-badge" style="background: var(--p${t.priority})">${urgencyLabels[t.priority]}</span>
-                        </div>
-                        <div class="task-meta"><span>📅 ${dateStr}</span></div>
-                    </div>
-                    <div class="task-actions">
-                        <button class="delete-btn edit-btn" onclick="event.stopPropagation(); openEditModal(${t.id})" title="Editar tarea">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-                            </svg>
-                        </button>
-                        <button class="delete-btn" onclick="event.stopPropagation(); openDeleteModal(${t.id})" title="Eliminar tarea">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg>
-                        </button>
-                    </div>
-                `;
-          container.appendChild(card);
-        });
       }
 
       function renderCalendar() {
@@ -1130,95 +1129,52 @@
         grid.innerHTML = "";
         headers.forEach((h) => grid.appendChild(h));
 
-        const firstDay = new Date(currentYear, currentMonth, 1).getDay();
         const daysInMonth = new Date(
           currentYear,
           currentMonth + 1,
           0,
         ).getDate();
-        let emptySlots = firstDay === 0 ? 6 : firstDay - 1;
+        const firstDay = new Date(currentYear, currentMonth, 1).getDay();
+        let empty = firstDay === 0 ? 6 : firstDay - 1;
 
-        const monthName = new Date(
+        document.getElementById("cal-month-year").innerText = new Date(
           currentYear,
           currentMonth,
         ).toLocaleDateString("es-ES", { month: "long", year: "numeric" });
-        document.getElementById("cal-month-year").innerText =
-          monthName.charAt(0).toUpperCase() + monthName.slice(1);
 
-        for (let i = 0; i < emptySlots; i++)
+        for (let i = 0; i < empty; i++)
           grid.appendChild(document.createElement("div"));
 
         for (let d = 1; d <= daysInMonth; d++) {
           const dayEl = document.createElement("div");
           dayEl.className = "cal-day";
           dayEl.innerText = d;
-          const dateISO = `${currentYear}-${String(currentMonth + 1).padStart(2, "0")}-${String(d).padStart(2, "0")}`;
+          const iso = `${currentYear}-${String(currentMonth + 1).padStart(2, "0")}-${String(d).padStart(2, "0")}`;
 
-          const tasksInDay = tasks.filter(
-            (t) => t.date === dateISO && !t.completed,
-          );
-          if (tasksInDay.length > 0) {
-            const hasUrgent = tasksInDay.some((t) => t.priority === 1);
-            dayEl.classList.add(hasUrgent ? "has-task-urgent" : "has-task");
-          }
+          if (tasks.some((t) => t.date === iso && !t.completed))
+            dayEl.classList.add("has-task");
 
-          const today = new Date();
-          if (
-            d === today.getDate() &&
-            currentMonth === today.getMonth() &&
-            currentYear === today.getFullYear()
-          )
-            dayEl.classList.add("today");
-          if (selectedDateISO === dateISO) dayEl.classList.add("selected");
-
-          dayEl.onclick = () => showDayTasks(dateISO, dayEl);
+          dayEl.onclick = () => showDayTasks(iso, dayEl);
           grid.appendChild(dayEl);
         }
       }
 
-      function showDayTasks(dateStr, el) {
-        selectedDateISO = dateStr;
+      function showDayTasks(date, el) {
+        selectedDateISO = date;
         document
           .querySelectorAll(".cal-day")
           .forEach((d) => d.classList.remove("selected"));
-        if (el) el.classList.add("selected");
-
-        const dayList = document.getElementById("day-tasks-list");
-        dayList.innerHTML = "";
-        const dayTasks = tasks.filter((t) => t.date === dateStr);
-        if (dayTasks.length === 0) {
-          dayList.innerHTML =
-            '<p style="color:var(--text-gray); font-size:1.1rem; margin-top:10px; font-weight:700;">Sin tareas para este día.</p>';
-        } else {
+        el.classList.add("selected");
+        const list = document.getElementById("day-tasks-list");
+        list.innerHTML = "";
+        const dayTasks = tasks.filter((t) => t.date === date);
+        if (dayTasks.length === 0) list.innerHTML = "<p>Sin tareas.</p>";
+        else {
           dayTasks.forEach((t) => {
             const item = document.createElement("div");
             item.className = "task-card";
-            item.style.padding = "16px 18px";
-            item.style.display = "flex";
-            item.style.alignItems = "center";
-            item.style.gap = "12px";
-            item.onclick = () => {
-              toggleTask(t.id);
-            };
-            item.innerHTML = `
-                        <div class="priority-indicator p-${t.priority} ${t.completed ? "done" : ""}" style="width:20px; height:20px; border-width:2.5px; flex-shrink: 0;"></div>
-                        <div style="flex: 1; min-width: 0;">
-                            <span style="display: block; ${t.completed ? "text-decoration:line-through; color:gray" : "font-weight:700; font-size:1rem;"}">${escapeHTML(t.text)}</span>
-                        </div>
-                        <span class="urgency-badge" style="background: var(--p${t.priority}); font-size:0.65rem; flex-shrink: 0;">${urgencyLabels[t.priority]}</span>
-                        <div style="display: flex; gap: 8px; flex-shrink: 0;">
-                            <button class="delete-btn edit-btn" onclick="event.stopPropagation(); openEditModal(${t.id})" title="Editar tarea">
-                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                                  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                                  <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-                                </svg>
-                            </button>
-                            <button class="delete-btn" onclick="event.stopPropagation(); openDeleteModal(${t.id})" title="Eliminar tarea">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg>
-                            </button>
-                        </div>
-                    `;
-            dayList.appendChild(item);
+            item.innerHTML = `<span>${escapeHTML(t.text)}</span>`;
+            list.appendChild(item);
           });
         }
       }
@@ -1229,10 +1185,21 @@
         return div.innerHTML;
       }
 
-      window.addEventListener("click", (e) => {
-        if (e.target.id === "task-modal") closeModal();
-        if (e.target.id === "delete-modal") closeDeleteModal();
-      });
+      function openDeleteModal(id) {
+        taskToDelete = id;
+        document.getElementById("delete-modal").style.display = "flex";
+        document.getElementById("confirm-delete-btn").onclick = () => {
+          deleteTask(taskToDelete);
+          closeDeleteModal();
+        };
+      }
+
+      window.onclick = (e) => {
+        if (e.target.className === "modal") {
+          closeModal();
+          closeDeleteModal();
+        }
+      };
     </script>
   </body>
 </html>
