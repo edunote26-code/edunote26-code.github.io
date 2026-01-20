@@ -847,7 +847,11 @@
           el.classList.add("active");
 
           if (view === "calendar") renderCalendar();
-          else renderTaskList();
+          else {
+            // Recargar tareas desde localStorage antes de renderizar
+            tasks = JSON.parse(localStorage.getItem("arden_tasks_pro")) || [];
+            renderTaskList();
+          }
         }, 50);
       }
 
