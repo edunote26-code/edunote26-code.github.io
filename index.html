@@ -698,6 +698,24 @@
           </svg>
           <span>CALENDARIO</span>
         </div>
+        <div
+          class="nav-item"
+          id="nav-links"
+          onclick="switchView('links', this)"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="3"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
+            <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
+          </svg>
+          <span>ENLACES</span>
+        </div>
       </nav>
 
       <main>
@@ -783,6 +801,317 @@
             <div id="day-tasks-list" class="task-list-container"></div>
           </div>
         </div>
+
+        <!-- VISTA ENLACES -->
+        <div id="view-links" class="view">
+          <style>
+            @keyframes float {
+              0%, 100% { transform: translateY(0px); }
+              50% { transform: translateY(-10px); }
+            }
+            
+            @keyframes shimmer {
+              0% { background-position: -1000px 0; }
+              100% { background-position: 1000px 0; }
+            }
+            
+            @keyframes fadeInUp {
+              from {
+                opacity: 0;
+                transform: translateY(30px);
+              }
+              to {
+                opacity: 1;
+                transform: translateY(0);
+              }
+            }
+            
+            @keyframes rotate {
+              from { transform: rotate(0deg); }
+              to { transform: rotate(360deg); }
+            }
+            
+            .links-header {
+              text-align: center;
+              margin-bottom: 40px;
+              animation: fadeInUp 0.6s ease-out;
+            }
+            
+            .links-title {
+              font-size: 2.8rem;
+              font-weight: 900;
+              background: linear-gradient(135deg, #0066ff 0%, #00d4ff 100%);
+              -webkit-background-clip: text;
+              -webkit-text-fill-color: transparent;
+              background-clip: text;
+              margin-bottom: 10px;
+              letter-spacing: -2px;
+            }
+            
+            .links-subtitle {
+              font-size: 1.1rem;
+              color: var(--text-gray);
+              font-weight: 600;
+            }
+            
+            .links-container {
+              max-width: 900px;
+              margin: 0 auto;
+              padding: 20px;
+            }
+            
+            .link-card {
+              background: linear-gradient(135deg, #0066ff 0%, #00d4ff 100%);
+              padding: 2px;
+              border-radius: 24px;
+              margin-bottom: 30px;
+              animation: fadeInUp 0.6s ease-out 0.2s backwards;
+              transition: all 0.3s ease;
+              box-shadow: 0 4px 15px rgba(0, 102, 255, 0.15);
+            }
+            
+            .link-card:hover {
+              transform: translateY(-5px);
+              box-shadow: 0 8px 25px rgba(0, 102, 255, 0.25);
+            }
+            
+            .link-card-inner {
+              background: white;
+              border-radius: 22px;
+              padding: 40px;
+              text-align: center;
+              position: relative;
+              overflow: hidden;
+            }
+            
+            .link-card-inner::before {
+              content: '';
+              position: absolute;
+              top: -50%;
+              left: -50%;
+              width: 200%;
+              height: 200%;
+              background: linear-gradient(
+                45deg,
+                transparent,
+                rgba(0, 102, 255, 0.03),
+                transparent
+              );
+              transform: rotate(45deg);
+              animation: shimmer 3s infinite;
+            }
+            
+            .link-icon {
+              font-size: 4rem;
+              margin-bottom: 20px;
+              display: inline-block;
+              animation: float 3s ease-in-out infinite;
+              filter: drop-shadow(0 10px 20px rgba(0, 102, 255, 0.2));
+            }
+            
+            .link-title {
+              font-size: 1.8rem;
+              font-weight: 900;
+              color: var(--text-dark);
+              margin-bottom: 15px;
+              position: relative;
+            }
+            
+            .link-description {
+              font-size: 1rem;
+              color: var(--text-gray);
+              margin-bottom: 30px;
+              line-height: 1.6;
+              font-weight: 500;
+            }
+            
+            .cbt-button {
+              display: inline-block;
+              background: linear-gradient(135deg, #0066ff 0%, #00d4ff 100%);
+              color: white;
+              padding: 20px 50px;
+              border-radius: 50px;
+              text-decoration: none;
+              font-weight: 900;
+              font-size: 1.2rem;
+              transition: all 0.3s ease;
+              box-shadow: 0 10px 30px rgba(0, 102, 255, 0.3);
+              position: relative;
+              overflow: hidden;
+              text-transform: uppercase;
+              letter-spacing: 1px;
+            }
+            
+            .cbt-button::before {
+              content: '';
+              position: absolute;
+              top: 0;
+              left: -100%;
+              width: 100%;
+              height: 100%;
+              background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+              transition: left 0.5s;
+            }
+            
+            .cbt-button:hover::before {
+              left: 100%;
+            }
+            
+            .cbt-button:hover {
+              transform: translateY(-3px) scale(1.05);
+              box-shadow: 0 15px 40px rgba(0, 102, 255, 0.4);
+            }
+            
+            .cbt-button:active {
+              transform: translateY(-1px) scale(1.02);
+            }
+            
+            .coming-soon-card {
+              background: linear-gradient(135deg, #0066ff 0%, #4d94ff 100%);
+              padding: 2px;
+              border-radius: 20px;
+              animation: fadeInUp 0.6s ease-out 0.4s backwards;
+              transition: all 0.3s ease;
+              box-shadow: 0 4px 15px rgba(0, 102, 255, 0.15);
+            }
+            
+            .coming-soon-card:hover {
+              transform: translateY(-3px);
+              box-shadow: 0 6px 20px rgba(0, 102, 255, 0.25);
+            }
+            
+            .coming-soon-inner {
+              background: white;
+              border-radius: 18px;
+              padding: 35px;
+              text-align: center;
+              position: relative;
+              overflow: hidden;
+            }
+            
+            .coming-soon-inner::before {
+              content: '';
+              position: absolute;
+              top: 0;
+              left: 0;
+              right: 0;
+              bottom: 0;
+              background: 
+                repeating-linear-gradient(
+                  45deg,
+                  transparent,
+                  transparent 10px,
+                  rgba(0, 102, 255, 0.02) 10px,
+                  rgba(0, 102, 255, 0.02) 20px
+                );
+              pointer-events: none;
+            }
+            
+            .coming-soon-text {
+              font-size: 1.3rem;
+              font-weight: 800;
+              background: linear-gradient(135deg, #0066ff 0%, #4d94ff 100%);
+              -webkit-background-clip: text;
+              -webkit-text-fill-color: transparent;
+              background-clip: text;
+              margin: 0;
+              position: relative;
+              text-transform: uppercase;
+              letter-spacing: 2px;
+            }
+            
+            .icon-placeholder {
+              width: 80px;
+              height: 80px;
+              margin: 0 auto 20px;
+              position: relative;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+            }
+            
+            .icon-placeholder svg {
+              width: 100%;
+              height: 100%;
+              animation: float 2.5s ease-in-out infinite;
+              filter: drop-shadow(0 4px 12px rgba(0, 102, 255, 0.3));
+            }
+            
+            @media (max-width: 768px) {
+              .links-title {
+                font-size: 2rem;
+              }
+              
+              .link-card-inner {
+                padding: 30px 20px;
+              }
+              
+              .link-icon {
+                font-size: 3rem;
+              }
+              
+              .link-title {
+                font-size: 1.4rem;
+              }
+              
+              .cbt-button {
+                padding: 16px 40px;
+                font-size: 1rem;
+              }
+              
+              .icon-placeholder {
+                width: 60px;
+                height: 60px;
+              }
+            }
+          </style>
+          
+          <div class="links-header">
+            <h1 class="links-title">Enlaces Externos</h1>
+            <p class="links-subtitle">✨ Recursos educativos de calidad para tu aprendizaje</p>
+          </div>
+          
+          <div class="links-container">
+            <div class="link-card">
+              <div class="link-card-inner">
+                <div class="link-icon">🎓</div>
+                <h2 class="link-title">CBT José Antonio Alzate</h2>
+                <p class="link-description">
+                  Accede a todos los recursos y temas del Centro de Bachillerato Tecnológico. 
+                  Encuentra materiales educativos, guías de estudio y contenido especializado.
+                </p>
+                <a 
+                  href="https://sites.google.com/site/cbttemas" 
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="cbt-button"
+                >
+                  Visitar Sitio
+                </a>
+              </div>
+            </div>
+            
+            <div class="coming-soon-card">
+              <div class="coming-soon-inner">
+                <div class="icon-placeholder">
+                  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                      <linearGradient id="rocketGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" style="stop-color:#0066ff;stop-opacity:1" />
+                        <stop offset="100%" style="stop-color:#00d4ff;stop-opacity:1" />
+                      </linearGradient>
+                    </defs>
+                    <path d="M12 2C12 2 6 8 6 13C6 16.31 8.69 19 12 19C15.31 19 18 16.31 18 13C18 8 12 2 12 2Z" fill="url(#rocketGradient)" stroke="url(#rocketGradient)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <circle cx="12" cy="12" r="1.5" fill="white"/>
+                    <path d="M9 19L7 22M15 19L17 22" stroke="#0066ff" stroke-width="2" stroke-linecap="round"/>
+                    <path d="M7 13L3 14L4 16L7 15M17 13L21 14L20 16L17 15" fill="#0066ff" stroke="#0066ff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </div>
+                <p class="coming-soon-text">Próximamente más enlaces</p>
+              </div>
+            </div>
+          </div>
+        </div>
       </main>
     </div>
 
@@ -791,17 +1120,7 @@
     <!-- MODAL: NUEVA/EDITAR TAREA -->
     <div id="task-modal" class="modal">
       <div class="modal-content">
-        <h3
-          id="modal-title"
-          style="
-            font-size: 1.4rem;
-            font-weight: 800;
-            margin-bottom: 20px;
-            text-align: center;
-          "
-        >
-          Nueva Tarea
-        </h3>
+        <h3 id="modal-title" style="font-size: 1.4rem; font-weight: 800; margin-bottom: 20px; text-align: center;">Nueva Tarea</h3>
         <div class="form-group">
           <label>Actividad</label>
           <input
@@ -829,11 +1148,7 @@
           <button class="btn btn-secondary" onclick="closeModal()">
             Cancelar
           </button>
-          <button
-            class="btn btn-primary"
-            id="save-task-btn"
-            onclick="handleSaveTask()"
-          >
+          <button class="btn btn-primary" id="save-task-btn" onclick="handleSaveTask()">
             Guardar
           </button>
         </div>
@@ -904,14 +1219,22 @@
           nextView.style.transform = "translateY(0)";
           el.classList.add("active");
 
+          // Controlar visibilidad del botón FAB
+          const fabButton = document.querySelector(".fab");
+          if (view === "links") {
+            fabButton.style.display = "none";
+          } else {
+            fabButton.style.display = "flex";
+          }
+
           if (view === "calendar") {
             renderCalendar();
             // Mostrar automáticamente las tareas del día de hoy
             const today = new Date();
             const todayISO = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
-            const todayElement = Array.from(
-              document.querySelectorAll(".cal-day"),
-            ).find((el) => el.classList.contains("today"));
+            const todayElement = Array.from(document.querySelectorAll(".cal-day")).find(
+              (el) => el.classList.contains("today")
+            );
             if (todayElement) {
               showDayTasks(todayISO, todayElement);
             }
@@ -947,14 +1270,13 @@
       function openEditModal(id) {
         const task = tasks.find((t) => t.id === id);
         if (!task) return;
-
+        
         editingTaskId = id;
         document.getElementById("modal-title").innerText = "Editar Tarea";
         document.getElementById("save-task-btn").innerText = "Actualizar";
         document.getElementById("input-text").value = task.text;
         document.getElementById("input-date").value = task.date;
-        document.getElementById("input-priority").value =
-          task.priority.toString();
+        document.getElementById("input-priority").value = task.priority.toString();
         document.getElementById("task-modal").style.display = "flex";
         document.getElementById("input-text").focus();
       }
@@ -988,7 +1310,7 @@
           tasks = tasks.map((t) =>
             t.id === editingTaskId
               ? { ...t, text, date, priority: parseInt(priority) }
-              : t,
+              : t
           );
         } else {
           // Modo agregar
@@ -1100,7 +1422,7 @@
           const card = document.createElement("div");
           card.className = "task-card";
           card.onclick = () => toggleTask(t.id);
-
+          
           // Eventos para long-press en móvil
           card.addEventListener("touchstart", (e) => {
             startLongPress(t.id);
@@ -1111,7 +1433,7 @@
           card.addEventListener("touchmove", (e) => {
             cancelLongPress();
           });
-
+          
           card.innerHTML = `
                     <div class="priority-indicator p-${t.priority} ${t.completed ? "done" : ""}">
                         ${t.completed ? '<span style="color:white; font-size:12px">✓</span>' : ""}
